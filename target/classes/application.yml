@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    # type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/demo?serverTimezone=GMT%2b8&characterEncoding=UTF-8&userSSL=false
+      username: root
+      password: root12345
+server:
+  port: 9090
+mybatis:
+  # 配置mapper对应的配置文件的位置
+  mapper-locations: classpath:mapper/*.xml
+  # configuration:
+    # 输出使用的SQL语句
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+files:
+  upload:
+    path: E:/IDEA_coding/files/
+
+
