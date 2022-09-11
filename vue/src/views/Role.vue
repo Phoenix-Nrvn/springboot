@@ -80,18 +80,22 @@
     </div>
   </el-dialog>
 
-  <el-dialog title="角色信息" :visible.sync="menuDialogVis" width="40%">
-    <el-form label-width="80px" size="small">
-      <el-form-item label="名称">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="form.description" autocomplete="off"></el-input>
-      </el-form-item>
-    </el-form>
+  <el-dialog title="菜单分配" :visible.sync="menuDialogVis" width="30%">
+    <el-tree
+        :props="props"
+        :data="menuData"
+        show-checkbox
+        node-key="id"
+        ref="tree"
+        :default-expanded-keys="expanded"
+        :default-checked-keys="checked">
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span><i :class="data.icon"></i> {{ data.name }}</span>
+      </span>
+    </el-tree>
     <div slot="footer" class="dialog-footer">
       <el-button @click="menuDialogVis = false">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button type="primary" @click="saveRoleMenu">确 定</el-button>
     </div>
   </el-dialog>
 
@@ -112,7 +116,15 @@ export default {
       dialogFormVisible: false,
       menuDialogVis: false,
       multipleSelection: [],
-      headerBg: 'headerBg'
+      headerBg: 'headerBg',
+      menuData: [],
+      // 将菜单中的name属性映射为此处显示需要的label属性
+      props: {
+        label: 'name'
+      },
+      expended: [],
+      checked: [],
+      roleId: null,
     }
   },
 
@@ -195,8 +207,33 @@ export default {
         }
       })
     },
-    selectMenu(id) {
+    selectMenu(roleId) {
+      this.menuDialogVis = true
+      this.roleId = roleId
+      // 请求菜单数据
+      this.request.get("/menu").then(res => {
+        console.log(res.data)
+        this.menuData = res.data
 
+        // 将后台返回的菜单数据处理成id数组
+        this.expanded = this.menuData.map(v => v.id)
+
+      })
+
+      this.request.get("/role/roleMenu/" + this.roleId).then(res => {
+        this.checked = res.data
+      })
+    },
+    saveRoleMenu() {
+      this.request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+        console.log(res);
+        if (res.code === '200') {
+          this.$message.success("设置成功")
+          this.menuDialogVis = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
   }
 }

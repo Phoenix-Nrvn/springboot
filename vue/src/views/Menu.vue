@@ -3,8 +3,6 @@
 
   <div style="padding: 10px 0">
     <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" class="ml-5" v-model="name"></el-input>
-    <!-- <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>
-    <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-location" class="ml-5" v-model="address"></el-input> -->
     <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
     <el-button type="warning" @click="reset">重置</el-button>
   </div>
@@ -22,23 +20,25 @@
     >
       <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>
     </el-popconfirm>
-    <!--
-    <el-upload action="http://localhost:9090/menu/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
-    <el-button type="primary" class="ml-5">导入<i class="el-icon-bottom"></i></el-button>
-    </el-upload>
-    <el-button type="primary" class="ml-5" @click="exp">导出<i class="el-icon-top"></i> </el-button>
-    -->
   </div>
 
-  <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
+  <el-table :data="tableData" border stripe :header-cell-class-name="headerBg"
+            row-key="id" default-expand-all @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="id" label="ID" width="80"></el-table-column>
     <el-table-column prop="name" label="名称"></el-table-column>
     <el-table-column prop="path" label="路径"></el-table-column>
-    <el-table-column prop="icon" label="图标"></el-table-column>
-    <el-table-column prop="description" label="描述"></el-table-column>
-    <el-table-column label="操作" width="200" align="center">
+    <!-- 单独增加一个class，调整图标的样式；同时控制标题字体和别的头部一样大，只有该列的内容变大 -->
+    <el-table-column label="图标" class-name="fontSize18" align="center" label-class-name="fontSize12">
       <template slot-scope="scope">
+        <i :class="scope.row.icon"/>
+      </template>
+    </el-table-column>
+    <el-table-column prop="description" label="描述"></el-table-column>
+    <el-table-column label="操作" width="280" align="center">
+      <template slot-scope="scope">
+        <!-- 可以考虑，二级菜单不能新增子菜单，也就是pid不为null时，不能新增，v-if = "!scope.row.pid" -->
+        <el-button type="primary" @click="addChildren(scope.row.id)">新增子菜单<i class="el-icon-plus"></i></el-button>
         <el-button type="warning" @click="handleUpdate(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
         <el-popconfirm
             class="ml-5"
@@ -66,7 +66,7 @@
     </el-pagination>
   </div>
 
-  <el-dialog title="角色信息" :visible.sync="dialogFormVisible" width="40%">
+  <el-dialog title="菜单信息" :visible.sync="dialogFormVisible" width="40%">
     <el-form label-width="80px" size="small">
       <el-form-item label="名称">
         <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -75,7 +75,13 @@
         <el-input v-model="form.path" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="图标">
-        <el-input v-model="form.icon" autocomplete="off"></el-input>
+        <template slot-scope="scope">
+          <el-select clearable v-model="form.icon" placeholder="请选择" style="width: 100%">
+            <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.value">
+              <i :class="item.value"/> {{ item.name }}
+            </el-option>
+          </el-select>
+        </template>
       </el-form-item>
       <el-form-item label="描述">
         <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -103,7 +109,8 @@ export default {
       form: {},
       dialogFormVisible: false,
       multipleSelection: [],
-      headerBg: 'headerBg'
+      headerBg: 'headerBg',
+      options: []
     }
   },
 
@@ -123,22 +130,25 @@ export default {
       this.load()
     },
     load() {
-      this.request.get("/menu/pageSelect",{
+      this.request.get("/menu",{
         params: {
-          pageNo: this.pageNo,
-          pageSize: this.pageSize,
           name: this.name,
         }
       }).then(res => {
         console.log(res.data)
-
-        this.tableData = res.data.records
-        this.total = res.data.total
+        this.tableData = res.data
       })
     },
     reset() {
       this.name=""
       this.load()
+    },
+    addChildren(id) {
+      this.dialogFormVisible = true
+      this.form = {}
+      if (id) {
+        this.form.pid = id
+      }
     },
     handleAdd() {
       this.dialogFormVisible = true
@@ -147,6 +157,12 @@ export default {
     handleUpdate(row) {
       this.form = row
       this.dialogFormVisible = true
+
+      // 请求图标的数据
+      this.request.get("/menu/icons").then(res => {
+        console.log(res.data)
+        this.options = res.data
+      })
     },
     handleDelete(id) {
       this.request.delete("/menu/delete/" + id).then(res => {
@@ -200,5 +216,11 @@ export default {
 <style>
 .headerBg {
   background: #eee!important;
+}
+.fontSize18 {
+  font-size: 18px;
+}
+.fontSize12 {
+  font-size: 12px;
 }
 </style>

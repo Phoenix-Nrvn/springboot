@@ -1,9 +1,12 @@
 package com.demo.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -20,13 +23,13 @@ import lombok.Setter;
 @Getter
 @Setter
   @TableName("sys_menu")
-@ApiModel(value = "Menu对象", description = "")
+@ApiModel(value = "Menu对象")
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
       @ApiModelProperty("id")
-        @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
       private Integer id;
 
       @ApiModelProperty("名称")
@@ -41,5 +44,14 @@ public class Menu implements Serializable {
       @ApiModelProperty("描述")
       private String description;
 
+      /**
+       * Desc: 表示该字段在数据表中不存在对应的属性
+       * @date 2022/9/6 20:58
+       */
+      @TableField(exist = false)
+      private List<Menu> children;
+
+      @ApiModelProperty("父级id")
+      private Integer pid;
 
 }

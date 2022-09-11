@@ -29,4 +29,7 @@ public interface Constants {
     String CODE_500 = "500";
 
     String CODE_600 = "600";
+
+    /** 类型为icon的数据 */
+    String DICT_TYPE_ICON = "icon";
 }

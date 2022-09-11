@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.demo.springboot.common.Result;
+import com.demo.springboot.mapper.RoleMenuMapper;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -70,6 +71,25 @@ public class RoleController {
         }
         queryWrapper.orderByDesc("id");
         return Result.success(roleService.page(new Page<>(pageNo, pageSize), queryWrapper));
+    }
+
+    /**
+     * Desc: 绑定角色和菜单的关系
+     * @param roleId 角色id
+     * @param menuIds 菜单id数组
+     * @return {@link Result}
+     * @author LISHANSHAN
+     * @date 2022/9/11 19:50
+     */
+    @PostMapping("/roleMenu/{roleId}")
+    public Result roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
+        roleService.setRoleMenu(roleId, menuIds);
+        return Result.success();
+    }
+
+    @GetMapping("/roleMenu/{roleId}")
+    public Result getRoleMenu(@PathVariable Integer roleId) {
+        return Result.success(roleService.getRoleMenu(roleId));
     }
 
 }
