@@ -1,6 +1,9 @@
 package com.demo.springboot.controller.dto;
 
+import com.demo.springboot.entity.Menu;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author LISHANSHAN
@@ -21,5 +24,9 @@ public class UserDto {
     private String avatarUrl;
 
     private String token;
+
+    private String role;
+
+    private List<Menu> menus;
 
 }

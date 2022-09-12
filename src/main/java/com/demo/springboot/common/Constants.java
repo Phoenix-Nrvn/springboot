@@ -32,4 +32,5 @@ public interface Constants {
 
     /** 类型为icon的数据 */
     String DICT_TYPE_ICON = "icon";
+
 }

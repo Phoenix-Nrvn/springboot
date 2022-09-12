@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @Description TODO
  * @date 2022/07/2022/7/6 17:35
  */
-
+@Mapper
 public interface FilesMapper extends BaseMapper<Files> {
 }

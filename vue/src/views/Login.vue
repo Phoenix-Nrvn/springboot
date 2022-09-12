@@ -53,6 +53,7 @@ export default {
             if (res.code === '200') {
               // 以字符串形式，存储用户信息到浏览器
               localStorage.setItem("user", JSON.stringify(res.data))
+              localStorage.setItem("menus", JSON.stringify(res.data.menus))
               this.$router.push("/home")
               this.$message.success("登录成功")
             } else {

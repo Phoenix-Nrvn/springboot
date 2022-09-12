@@ -58,23 +58,7 @@ public class MenuController {
 
     @GetMapping
     public Result findAll(@RequestParam(defaultValue = "") String name){
-        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(name)) {
-            queryWrapper.like("name", name);
-        }
-        // 查询所有数据
-        List<Menu> list = menuService.list(queryWrapper);
-        // 找出pid为null的一级菜单
-        List<Menu> parentNodes = list.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
-        System.out.println(parentNodes);
-        // 找出一级菜单的子菜单
-        for (Menu menu : parentNodes) {
-            // 从第一步获取的list中，筛选出所有pid为一级菜单id的Menu
-            // 由于list中包含pid为null的一级菜单，所以不能m.getPid().equals(menu.getId())，会抛出空指针异常
-            List<Menu> cMenu = list.stream().filter(m -> menu.getId().equals(m.getPid())).collect(Collectors.toList());
-            System.out.println(cMenu);
-            menu.setChildren(cMenu);
-        }
+        List<Menu> parentNodes = menuService.findMenus(name);
         return Result.success(parentNodes);
     }
 

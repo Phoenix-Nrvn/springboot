@@ -31,7 +31,7 @@
     <el-table-column prop="id" label="ID" width="80"></el-table-column>
     <el-table-column prop="name" label="文件名称" ></el-table-column>
     <el-table-column prop="type" label="文件类型" ></el-table-column>
-    <el-table-column prop="size" lable="文件大小(kb)"></el-table-column>
+    <el-table-column prop="size" label="文件大小(kb)"></el-table-column>
     <el-table-column label="下载">
       <template slot-scope="scope">
         <el-button type="primary" @click="download(scope.row.url)">下载</el-button>
