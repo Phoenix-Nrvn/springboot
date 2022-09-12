@@ -7,29 +7,7 @@ import store from "../store";
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Manage',
-    component: () => import('../views/Manage.vue'),
-    // 重定向到主页
-    redirect: "/login",
-    children: [
-      { path: 'home', name: '首页', component: () => import('../views/Home.vue') },
-      { path: 'user', name: '用户管理', component: () => import('../views/User.vue') },
-      { path: 'person', name: '个人信息', component: () => import('../views/Person') },
-      { path: 'files', name:'文件管理', component: () => import('../views/Files') },
-      { path: 'role', name: '角色管理', component: () => import('../views/Role') },
-      { path: 'menu', name: '菜单管理', component: () => import('../views/Menu') }
-    ]
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
+    // 固定路由
   {
     path: '/login',
     name: 'Login',
@@ -39,6 +17,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import('../views/Register.vue')
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: () => import('../views/404.vue')
   }
 ]
 
@@ -47,6 +30,47 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// 刷新页面会导致路由重置
+export const setRoutes = () => {
+  // 取出menus数据
+  const storeMenus = localStorage.getItem("menus");
+  if (storeMenus) {
+    const manageRoute = { path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: "/login", children: [] }
+    const menus = JSON.parse(storeMenus);
+    // 拼接动态子路由
+    menus.forEach(item => {
+      // 当且仅当path不为null的时候，采取设置路由
+      if (item.path) {
+        let itemMenu = { path: item.path.replace("/", ""), name: item.name, component: () => import('../views/' + item.pagePath + '.vue') }
+        manageRoute.children.push(itemMenu)
+      } else if (item.children.length) {
+        item.children.forEach(item => {
+          if (item.path) {
+            let itemMenu = {
+              path: item.path.replace("/", ""),
+              name: item.name,
+              component: () => import('../views/' + item.pagePath + '.vue')
+            }
+            manageRoute.children.push(itemMenu)
+          }
+        })
+      }
+    })
+
+    // 获取当前的路由对象名称数组
+    const currentRoutes = router.getRoutes().map(v => v.name)
+    if (!currentRoutes.includes('Manage')) {
+      // 添加到当前路由对象中去
+      router.addRoute(manageRoute)
+    }
+
+  }
+}
+
+// 重置就再set一次路由
+setRoutes()
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
   // 设置当前的路由名称，为了在Header组件中去使用

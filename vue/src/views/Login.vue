@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import {setRoutes} from "../router";
+
 export default {
   name: "Login",
   data() {
@@ -54,6 +56,9 @@ export default {
               // 以字符串形式，存储用户信息到浏览器
               localStorage.setItem("user", JSON.stringify(res.data))
               localStorage.setItem("menus", JSON.stringify(res.data.menus))
+
+              // 动态设置当前用户的路由
+              setRoutes()
               this.$router.push("/home")
               this.$message.success("登录成功")
             } else {

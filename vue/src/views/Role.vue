@@ -34,10 +34,11 @@
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="id" label="ID" width="80"></el-table-column>
     <el-table-column prop="name" label="名称"></el-table-column>
+    <el-table-column prop="flag" label="唯一标识"></el-table-column>
     <el-table-column prop="description" label="描述"></el-table-column>
     <el-table-column label="操作" width="280" align="center">
       <template slot-scope="scope">
-        <el-button type="info" @click="selectMenu(scope.row.id)" slot="reference">分配菜单<i class="el-icon-menu"></i> </el-button>
+        <el-button type="info" @click="selectMenu(scope.row)" slot="reference">分配菜单<i class="el-icon-menu"></i> </el-button>
         <el-button type="warning" @click="handleUpdate(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
         <el-popconfirm
             class="ml-5"
@@ -124,7 +125,8 @@ export default {
       },
       expended: [],
       checked: [],
-      roleId: null,
+      roleId: 0,
+      roleFlag: ''
     }
   },
 
@@ -207,9 +209,11 @@ export default {
         }
       })
     },
-    selectMenu(roleId) {
+    selectMenu(role) {
       this.menuDialogVis = true
-      this.roleId = roleId
+      this.roleId = role.id
+      this.roleFlag = role.flag
+
       // 请求菜单数据
       this.request.get("/menu").then(res => {
         console.log(res.data)
@@ -230,6 +234,11 @@ export default {
         if (res.code === '200') {
           this.$message.success("设置成功")
           this.menuDialogVis = false
+
+          // 如果修改的是管理员角色的菜单，那么需要重新登录；修改的是普通用户的，则不用
+          if (this.roleFlag === 'ROLE_ADMIN') {
+            this.$store.commit("logout")
+          }
         } else {
           this.$message.error(res.message)
         }

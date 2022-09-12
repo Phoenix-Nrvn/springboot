@@ -5,8 +5,7 @@
            active-text-color="#ffd04b"
            :collapse-transition="false"
            :collapse="isCollapse"
-           router
-  >
+           router>
 
     <!-- line-height 设置跟高度height属性大小一致，便可以让元素垂直居中 -->
     <div style="height: 60px; line-height: 60px; text-align: center">
@@ -35,29 +34,6 @@
         </el-submenu>
       </div>
     </div>
-
-    <!-- <el-submenu index="2">
-      <template slot="title">
-        <i class="el-icon-menu"></i>
-        <span slot="title">系统管理</span>
-      </template>
-        <el-menu-item index="/user">
-          <i class="el-icon-user"></i>
-          <span slot="title">用户管理</span>
-        </el-menu-item>
-      <el-menu-item index="/role">
-        <i class="el-icon-s-custom"></i>
-        <span slot="title">角色管理</span>
-      </el-menu-item>
-      <el-menu-item index="/menu">
-        <i class="el-icon-menu"></i>
-        <span slot="title">菜单管理</span>
-      </el-menu-item>
-        <el-menu-item index="/files">
-          <i class="el-icon-document"></i>
-          <span slot="title">文件管理</span>
-        </el-menu-item>
-    </el-submenu> -->
   </el-menu>
 </template>
 
