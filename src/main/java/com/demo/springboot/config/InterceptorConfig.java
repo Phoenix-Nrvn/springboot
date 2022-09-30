@@ -23,6 +23,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
         // 此处不能通过new来获取一个JwtInterceptor对象，因为样是把对象没有交给Spring中的Bean容器管理的，报错
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/register", "/**/export", "/**/import", "/file/**");
+                .excludePathPatterns("/user/login", "/user/register", "/**/export", "/**/import", "/file/**", "/swagger-ui/**");
     }
 }

@@ -1,10 +1,11 @@
 import axios from 'axios'
 import ElementUI from "element-ui";
+import {serverIp} from "../../public/config";
 
 // 通过axios来create了一个request对象
 const request = axios.create({
     // 全局统一加上了'/api'前缀，也就是说所有接口都会加上'/api'前缀，页面写接口就不用加了
-    baseURL: 'http://localhost:9090',
+    baseURL: `http://${serverIp}:9090`,
     timeout: 5000
 })
 

@@ -2,10 +2,11 @@ spring:
   datasource:
     # type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/demo?serverTimezone=GMT%2b8&characterEncoding=UTF-8&userSSL=false
+      url: jdbc:mysql://8.130.36.213:3306/demo?serverTimezone=GMT%2b8&characterEncoding=UTF-8&userSSL=false
       username: root
       password: root12345
 server:
+  ip: 8.130.36.213
   port: 9090
 mybatis:
   # 配置mapper对应的配置文件的位置
@@ -19,6 +20,7 @@ mybatis-plus:
 
 files:
   upload:
-    path: E:/IDEA_coding/files/
+    # path: E:/IDEA_coding/files/
+    path: /home/files/
 
 

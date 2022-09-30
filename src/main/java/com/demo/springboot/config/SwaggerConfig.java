@@ -10,6 +10,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 /**
@@ -23,7 +24,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
 
     @Bean
-    public Docket restApi(){
+    public Docket restApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("标准接口")
                 .apiInfo(apiInfo("Spring Root中使用Swagger2构建RESTful APIS", "1.0"))

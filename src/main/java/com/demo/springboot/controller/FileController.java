@@ -36,6 +36,12 @@ public class FileController {
     @Value("${files.upload.path}")
     private String fileUploadPath;
 
+    @Value("${server.ip}")
+    private String serverIp;
+
+    @Value("${server.port}")
+    private String serverPort;
+
     @Resource
     private FilesMapper filesMapper;
 
@@ -82,7 +88,7 @@ public class FileController {
             uploadFile.delete();
             url = fileByMD5.getUrl();
         } else {
-            url = "http://localhost:9090/file/" + fileUUID;
+            url = "http://" + serverIp + ":" + serverPort + "/file/" + fileUUID;
         }
 
         // 存储数据库

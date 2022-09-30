@@ -31,12 +31,24 @@ const router = new VueRouter({
   routes
 })
 
+// 提供一个重置路由的方法
+export const resetRouter = () => {
+  router.matcher = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
+  })
+}
+
 // 刷新页面会导致路由重置
 export const setRoutes = () => {
   // 取出menus数据
   const storeMenus = localStorage.getItem("menus");
   if (storeMenus) {
-    const manageRoute = { path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: "/login", children: [] }
+    const manageRoute = { path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: "/login", children: [
+        { path: 'person', name: '个人信息', component: () => import('../views/Person') },
+        // { path: 'password', name: '修改密码', component: () => import('../views/Password.vue') },
+      ] }
     const menus = JSON.parse(storeMenus);
     // 拼接动态子路由
     menus.forEach(item => {

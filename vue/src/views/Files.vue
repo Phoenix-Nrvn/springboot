@@ -8,7 +8,9 @@
     <el-button type="warning" @click="reset">重置</el-button>
   </div>
   <div style="margin: 10px 0">
-    <el-upload action="http://localhost:9090/file/upload" :show-file-list="false" accept="xlsx" :on-success="handleFileUploadSuccess" style="display: inline-block">
+    <el-upload :action="'http://' + serverIp + ':9090/file/upload'"
+               :show-file-list="false" accept="xlsx"
+               :on-success="handleFileUploadSuccess" style="display: inline-block">
       <el-button type="primary" class="ml-5">上传文件<i class="el-icon-bottom"></i> </el-button>
     </el-upload>
     <el-popconfirm
@@ -72,10 +74,14 @@
 </template>
 
 <script>
+
+import {serverIp} from "../../public/config";
+
 export default {
   name: "Files",
   data() {
     return {
+      serverIp: serverIp,
       tableData: [],
       name: '',
       type: '',
